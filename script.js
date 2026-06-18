@@ -43,3 +43,33 @@ const observer = new IntersectionObserver(entries => {
     if (e.key === 'ArrowLeft') openLightbox((current - 1 + triggers.length) % triggers.length);
     if (e.key === 'ArrowRight') openLightbox((current + 1) % triggers.length);
   });
+
+  function positionBubbleMobile(btn, bubble) {
+  if (window.innerWidth > 600) return;
+  const rect = btn.getBoundingClientRect();
+  bubble.style.top = 'auto';
+  bubble.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+}
+
+function closeAllTooltips() {
+  document.querySelectorAll('.tooltip-bubble').forEach(b => {
+    b.classList.remove('open');
+    b.style.top = '';
+    b.style.bottom = '';
+  });
+}
+
+document.querySelectorAll('.tooltip-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const bubble = btn.nextElementSibling;
+    const isOpen = bubble.classList.contains('open');
+    closeAllTooltips();
+    if (!isOpen) {
+      bubble.classList.add('open');
+      positionBubbleMobile(btn, bubble);
+    }
+  });
+});
+
+document.addEventListener('click', closeAllTooltips);
